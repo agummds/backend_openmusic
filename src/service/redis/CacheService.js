@@ -3,9 +3,10 @@ const redis = require('redis');
 class CacheService {
   constructor() {
     this._client = redis.createClient({
-      // eslint-disable-next-line no-undef
-      host: process.env.REDIS_SERVER,
-      port: 6379
+      socket: {
+        // eslint-disable-next-line no-undef
+        host: process.env.REDIS_SERVER,
+      },
     });
     this._client.on('error', (error) => {
       console.error(error);

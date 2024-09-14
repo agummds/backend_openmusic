@@ -75,7 +75,7 @@ const init = async () => {
   const playlistsSongService = new PlaylistsSongService(collaborationsService);
   const playlistActivitiesService = new PlaylistActivitiesService();
   // eslint-disable-next-line no-undef
-  const storageService = new StorageService(path.resolve(__dirname, '/api/albums/file/images'));
+  const storageService = new StorageService(path.resolve(__dirname, 'api/albums/file/images'));
 
 
   const server = Hapi.server({
