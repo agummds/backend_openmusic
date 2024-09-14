@@ -8,6 +8,10 @@ class AlbumsHandler {
     this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
     this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
     this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
+    this.postAlbumCoverHandler = this.postAlbumCoverHandler.bind(this);
+    this.postLikeAlbumHandler = this.postLikeAlbumHandler.bind(this);
+    this.getLikesAlbumHandler = this.getLikesAlbumHandler.bind(this);
+    this.deleteLikeAlbumHandler = this.deleteLikeAlbumHandler.bind(this);
   }
 
   async postAlbumHandler(request, h) {
@@ -77,6 +81,69 @@ class AlbumsHandler {
     return {
       status: 'success',
       message: 'Album telah berhasil dihapus',
+    };
+  }
+  // Menambahakan Bagian Cover Handler
+  async postAlbumCoverHandler(request, h) {
+    const { id } = request.params;
+    const { cover } = request.payload;
+    this._validator.validateAlbumCoverHeaders(cover.hapi.headers);
+    const filename = await this._storageService.writeFile(cover, cover.hapi);
+    // eslint-disable-next-line no-undef
+    const url = `http://${process.env.HOST}:${process.env.PORT}/albums/file/images/${filename}`;
+    await this._service.editAlbumCoverById(id, url);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Cover berhasil ditambahkan',
+    });
+    response.code(201);
+    return response;
+  }
+
+  // Menambahakan Bagian postLikeAlbumHandler
+  async postLikeAlbumHandler(request, h) {
+    const { id } = request.params;
+    const { id: credentialId } = request.auth.credentials;
+
+    await this._service.getAlbumById(id);
+    await this._service.addLikeAlbum(id, credentialId);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Album disukai',
+    });
+    response.code(201);
+    return response;
+  }
+  // Menambahkan Bagian getLikesAlbumHandler
+  async getLikesAlbumHandler(request, h) {
+    const { id } = request.params;
+    const { isCache, result } = await this._service.getLikesAlbum(id);
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        likes: result,
+      },
+    });
+    if (isCache) {
+      response.header('X-Data-Source', 'cache');
+    } else {
+      response.header('X-Data-Source', 'not-cache');
+    }
+    return response;
+  }
+  // Menambahkan Bagian deleteLikeAlbumHandler
+  async deleteLikeAlbumHandler(request) {
+    const { id } = request.params;
+    const { id: credentialId } = request.auth.credentials;
+
+    await this._service.deleteLikeAlbum(id, credentialId);
+
+    return {
+      status: 'success',
+      message: 'Album tidak jadi disukai',
     };
   }
 }
