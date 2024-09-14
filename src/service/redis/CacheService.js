@@ -4,7 +4,8 @@ class CacheService {
   constructor() {
     this._client = redis.createClient({
       // eslint-disable-next-line no-undef
-      url: process.env.REDIS_URL,
+      host: process.env.REDIS_SERVER,
+      port: 6379
     });
     this._client.on('error', (error) => {
       console.error(error);
