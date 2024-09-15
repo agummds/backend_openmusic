@@ -1,4 +1,4 @@
-//const path = require('path');
+const path = require('path');
 
 const routes = (handler) => [
   {
@@ -26,28 +26,29 @@ const routes = (handler) => [
     path: '/albums/{id}',
     handler: handler.deleteAlbumByIdHandler,
   },
-  // {
-  //   method: 'POST',
-  //   path: '/albums/{id}/covers',
-  //   handler: (request, h) => handler.postAlbumCoverHandler(request, h),
-  //   options: {
-  //     payload: {
-  //       allow: 'multipart/form-data',
-  //       multipart: true,
-  //       output: 'stream',
-  //       maxBytes: 512000,
-  //     },
-  //   },
-  // },
-  // {
-  //   method: 'GET',
-  //   path: '/albums/file/images/{param*}',
-  //   handler: {
-  //     directory: {
-  //       path: path.join(__dirname, '/file/images'),
-  //     },
-  //   },
-  // },
+  {
+    method: 'POST',
+    path: '/albums/{id}/covers',
+    handler: handler.postUploadImageHandler,
+    options: {
+      payload: {
+        allow: 'multipart/form-data',
+        multipart: true,
+        output: 'stream',
+        maxBytes: 512000,
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/albums/covers/{param*}',
+    handler: {
+      directory: {
+        // eslint-disable-next-line no-undef
+        path: path.resolve(__dirname, '/file/covers'),
+      },
+    },
+  },
   {
     method: 'POST',
     path: '/albums/{id}/likes',

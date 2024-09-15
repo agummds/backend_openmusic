@@ -1,31 +1,56 @@
+/* eslint-disable no-undef */
+const ClientError = require('../../exceptions/ClientError');
+
 class UploadsHandler {
-  constructor(service, albumsService, validator) {
+  constructor(service, validator, albumsService) {
     this._service = service;
-    this._albumsService = albumsService;
     this._validator = validator;
+    this._albumsService = albumsService;
 
-    this.postUploadAlbumCoverHandler = this.postUploadAlbumCoverHandler.bind(this);
+    this.postUploadImageHandler = this.postUploadImageHandler.bind(this);
   }
 
-  async postUploadAlbumCoverHandler(request, h) {
-    const { cover } = request.payload;
-    const { id } = request.params;
-    this._validator.validateAlbumCoverHeaders(cover.hapi.headers);
+  async postUploadImageHandler(request, h) {
+    try {
+      const { cover } = request.payload;
+      const { id: albumId } = request.params;
 
-    const filename = await this._service.writeFile(cover, cover.hapi);
+      this._validator.validateImageHeaders(cover.hapi.headers);
 
-    // eslint-disable-next-line no-undef
-    const coverUrl = `http://${process.env.HOST}:${process.env.PORT}/uploads/covers/${filename}`;
+      const filename = await this._service.writeFile(cover, cover.hapi);
+      const url = `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`;
+      await this._albumsService.updateCoverAlbumById(albumId, url);
 
-    this._albumsService.editAlbumCoverById(id, coverUrl);
 
-    const response = h.response({
-      status: 'success',
-      message: 'Cover berhasil diunggah',
-    });
-    response.code(201);
-    return response;
+
+      const response = h.response({
+        status: 'success',
+        data: {
+          fileLocation: `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`,
+        },
+      });
+      response.code(201);
+      return response;
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
   }
+
 }
 
 module.exports = UploadsHandler;

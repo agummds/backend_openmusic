@@ -86,21 +86,22 @@ class AlbumsService {
     }
   }
   // Menambahakan Bagian Cover
-  async editAlbumCoverById(id, coverUrl) {
+  async editAlbumCoverById(albumId, url) {
     const query = {
       text: 'UPDATE albums SET "coverUrl" = $1 WHERE id = $2',
-      values: [coverUrl, id],
+      values: [albumId, url],
     };
     const result = await this._pool.query(query);
 
     try {
-      if (result.rowCount === 0) {
+      if (result.rows.length) {
         throw new NotFoundError('Gagal menambahkan cover. Id tidak ditemukan.');
       }
     } catch (error) {
       throw new error;
     }
   }
+
 
   // Menambahkan Bagian Like
   async addLikeAlbum(albumId, credentialId) {

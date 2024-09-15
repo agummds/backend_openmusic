@@ -1,15 +1,14 @@
+/* eslint-disable no-undef */
 class AlbumsHandler {
-  constructor(service, validator, storageService) {
+  constructor(service, validator) {
     this._service = service;
     this._validator = validator;
-    this._storageService = storageService;
 
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
     this.getAlbumsHandler = this.getAlbumsHandler.bind(this);
     this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
     this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
     this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
-    //this.postAlbumCoverHandler = this.postAlbumCoverHandler.bind(this);
     this.postLikeAlbumHandler = this.postLikeAlbumHandler.bind(this);
     this.getLikesAlbumHandler = this.getLikesAlbumHandler.bind(this);
     this.deleteLikeAlbumHandler = this.deleteLikeAlbumHandler.bind(this);
@@ -84,23 +83,46 @@ class AlbumsHandler {
       message: 'Album telah berhasil dihapus',
     };
   }
-  // // Menambahakan Bagian Cover Handler
-  // async postAlbumCoverHandler(request, h) {
-  //   const { id } = request.params;
-  //   const { cover } = request.payload;
-  //   this._validator.validateAlbumCoverHeaders(cover.hapi.headers);
-  //   const filename = await this._storageService.writeFile(cover, cover.hapi);
-  //   // eslint-disable-next-line no-undef
-  //   const url = `http://${process.env.HOST}:${process.env.PORT}/albums/file/images/${filename}`;
-  //   await this._service.editAlbumCoverById(id, url);
+  // Menambahakan Bagian Cover Handler
+  async postUploadImageHandler(request, h) {
+    console.log(request.payload);
+    try {
+      const { id } = request.params;
+      const { cover } = request.payload;
 
-  //   const response = h.response({
-  //     status: 'success',
-  //     message: 'Cover berhasil ditambahkan',
-  //   });
-  //   response.code(201);
-  //   return response;
-  // }
+      await this._service.isAlbumExist(id);
+
+      this._validator.validateImageHeaders(cover.hapi.headers);
+
+      const filename = await this._service.writeFile(cover, cover.hapi);
+      const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/albums/covers/${filename}`;
+      await this._service.editAlbumCoverById(id, fileLocation);
+
+      const response = h.response({
+        status: 'success',
+        message: 'Cover berhasil diunggah',
+      });
+      response.code(201);
+      return response;
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
 
   // Menambahakan Bagian postLikeAlbumHandler
   async postLikeAlbumHandler(request, h) {

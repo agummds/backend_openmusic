@@ -3,20 +3,19 @@ const path = require('path');
 const routes = (handler) => [
   {
     method: 'POST',
-    path: '/albums/{id}/covers',
-    handler: handler.postUploadAlbumCoverHandler,
+    path: '/uploads/{id}/covers',
+    handler: handler.postUploadImageHandler,
     options: {
       payload: {
         allow: 'multipart/form-data',
         multipart: true,
         output: 'stream',
-        maxBytes: 512000,
       },
     },
   },
   {
     method: 'GET',
-    path: '/uploads/{param*}',
+    path: '/upload/{param*}',
     handler: {
       directory: {
         // eslint-disable-next-line no-undef
