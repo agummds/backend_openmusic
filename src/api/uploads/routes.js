@@ -20,7 +20,7 @@ const routes = (handler) => [
     handler: {
       directory: {
         // eslint-disable-next-line no-undef
-        path: path.resolve(__dirname, 'api/albums/file/images'),
+        path: path.resolve(__dirname, 'file'),
       },
     },
   },

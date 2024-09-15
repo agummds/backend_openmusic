@@ -15,7 +15,7 @@ class UploadsHandler {
     const filename = await this._service.writeFile(cover, cover.hapi);
 
     // eslint-disable-next-line no-undef
-    const coverUrl = `http://${process.env.HOST}:${process.env.PORT}/uploads/${filename}`;
+    const coverUrl = `http://${process.env.HOST}:${process.env.PORT}/uploads/covers/${filename}`;
 
     this._albumsService.editAlbumCoverById(id, coverUrl);
 
