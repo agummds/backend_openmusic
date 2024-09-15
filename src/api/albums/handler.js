@@ -1,14 +1,15 @@
 class AlbumsHandler {
-  constructor(service, validator) {
+  constructor(service, validator, storageService) {
     this._service = service;
     this._validator = validator;
+    this._storageService = storageService;
 
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
     this.getAlbumsHandler = this.getAlbumsHandler.bind(this);
     this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
     this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
     this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
-    this.postAlbumCoverHandler = this.postAlbumCoverHandler.bind(this);
+    //this.postAlbumCoverHandler = this.postAlbumCoverHandler.bind(this);
     this.postLikeAlbumHandler = this.postLikeAlbumHandler.bind(this);
     this.getLikesAlbumHandler = this.getLikesAlbumHandler.bind(this);
     this.deleteLikeAlbumHandler = this.deleteLikeAlbumHandler.bind(this);
@@ -83,23 +84,23 @@ class AlbumsHandler {
       message: 'Album telah berhasil dihapus',
     };
   }
-  // Menambahakan Bagian Cover Handler
-  async postAlbumCoverHandler(request, h) {
-    const { id } = request.params;
-    const { cover } = request.payload;
-    this._validator.validateAlbumCoverHeaders(cover.hapi.headers);
-    const filename = await this._storageService.writeFile(cover, cover.hapi);
-    // eslint-disable-next-line no-undef
-    const url = `http://${process.env.HOST}:${process.env.PORT}/albums/file/images/${filename}`;
-    await this._service.editAlbumCoverById(id, url);
+  // // Menambahakan Bagian Cover Handler
+  // async postAlbumCoverHandler(request, h) {
+  //   const { id } = request.params;
+  //   const { cover } = request.payload;
+  //   this._validator.validateAlbumCoverHeaders(cover.hapi.headers);
+  //   const filename = await this._storageService.writeFile(cover, cover.hapi);
+  //   // eslint-disable-next-line no-undef
+  //   const url = `http://${process.env.HOST}:${process.env.PORT}/albums/file/images/${filename}`;
+  //   await this._service.editAlbumCoverById(id, url);
 
-    const response = h.response({
-      status: 'success',
-      message: 'Cover berhasil ditambahkan',
-    });
-    response.code(201);
-    return response;
-  }
+  //   const response = h.response({
+  //     status: 'success',
+  //     message: 'Cover berhasil ditambahkan',
+  //   });
+  //   response.code(201);
+  //   return response;
+  // }
 
   // Menambahakan Bagian postLikeAlbumHandler
   async postLikeAlbumHandler(request, h) {

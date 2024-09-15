@@ -1,23 +1,27 @@
 class UploadsHandler {
-  constructor(service, validator) {
+  constructor(service, albumsService, validator) {
     this._service = service;
+    this._albumsService = albumsService;
     this._validator = validator;
 
-    this.postUploadImageHandler = this.postUploadImageHandler.bind(this);
-
+    this.postUploadAlbumCoverHandler = this.postUploadAlbumCoverHandler.bind(this);
   }
-  async postUploadImageHandler(request, h) {
-    const { data } = request.payload;
-    this._validator.validateImageHeaders(data.hapi.headers);
 
-    const filename = await this._service.writeFile(data, data.hapi);
+  async postUploadAlbumCoverHandler(request, h) {
+    const { cover } = request.payload;
+    const { id } = request.params;
+    this._validator.validateAlbumCoverHeaders(cover.hapi.headers);
+
+    const filename = await this._service.writeFile(cover, cover.hapi);
+
+    // eslint-disable-next-line no-undef
+    const coverUrl = `http://${process.env.HOST}:${process.env.PORT}/uploads/${filename}`;
+
+    this._albumsService.editAlbumCoverById(id, coverUrl);
 
     const response = h.response({
       status: 'success',
-      data: {
-        // eslint-disable-next-line no-undef
-        fileLocation: `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`,
-      },
+      message: 'Cover berhasil diunggah',
     });
     response.code(201);
     return response;

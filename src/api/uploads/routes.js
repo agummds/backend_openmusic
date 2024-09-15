@@ -3,23 +3,24 @@ const path = require('path');
 const routes = (handler) => [
   {
     method: 'POST',
-    path: '/upload/images',
-    handler: handler.postUploadImageHandler,
+    path: '/albums/{id}/covers',
+    handler: handler.postUploadAlbumCoverHandler,
     options: {
       payload: {
         allow: 'multipart/form-data',
         multipart: true,
         output: 'stream',
+        maxBytes: 512000,
       },
     },
   },
   {
     method: 'GET',
-    path: '/upload/{param*}',
+    path: '/uploads/{param*}',
     handler: {
       directory: {
         // eslint-disable-next-line no-undef
-        path: path.resolve(__dirname, 'file'),
+        path: path.resolve(__dirname, 'api/albums/file/images'),
       },
     },
   },
