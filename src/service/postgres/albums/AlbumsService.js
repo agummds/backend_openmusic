@@ -88,12 +88,12 @@ class AlbumsService {
   // Menambahakan Bagian Cover
   async editAlbumCoverById(albumId, url) {
     const query = {
-      text: 'UPDATE albums SET "coverUrl" = $1 WHERE id = $2',
+      text: 'UPDATE albums SET "coverUrl" = $1 WHERE id = $2 RETURNING id',
       values: [url, albumId],
     };
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Cover Album gagal diperbarui. Id tidak ditemukan');
     }
   }

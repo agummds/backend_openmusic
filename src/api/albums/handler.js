@@ -1,9 +1,10 @@
+
 class AlbumsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
     //this._albumsService = albumsService;
-    //this._UploadsValidator = UploadsValidator;
+    //this._uploadsValidator = uploadsValidator;
 
 
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
@@ -54,10 +55,14 @@ class AlbumsHandler {
     const { id } = request.params;
     const album = await this._service.getAlbumById(id);
 
+    // Memastikan coverUrl ada, tidak tidak ada maka set menjadi null
+    const coverUrl = album.coverUrl || null;
+
     return {
       status: 'success',
       data: {
         album,
+        coverUrl,
       },
     };
   }
@@ -89,46 +94,28 @@ class AlbumsHandler {
   }
   // Menambahakan Bagian Cover Handler
   // async postUploadImageHandler(request, h) {
-  //   try {
-  //     const { cover } = request.payload;
-  //     const { id: albumId } = request.params;
+  //   const { cover } = request.payload;
+  //   const { id: albumId } = request.params;
 
-  //     this._validator.validateImageHeaders(cover.hapi.headers);
+  //   this._uploadsValidator.validateImageHeaders(cover.hapi.headers);
 
-  //     const filename = await this._service.writeFile(cover, cover.hapi);
-  //     const url = `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`;
-  //     await this._albumsService.updateCoverAlbumById(albumId, url);
+  //   const filename = await this._service.writeFile(cover, cover.hapi);
+  //   // eslint-disable-next-line no-undef
+  //   const url = `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`;
+  //   await this._albumsService.updateCoverAlbumById(albumId, url);
 
 
 
-  //     const response = h.response({
-  //       status: 'success',
-  //       data: {
-  //         fileLocation: `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`,
-  //       },
-  //     });
-  //     response.code(201);
-  //     return response;
-  //   } catch (error) {
-  //     if (error instanceof ClientError) {
-  //       const response = h.response({
-  //         status: 'fail',
-  //         message: error.message,
-  //       });
-  //       response.code(error.statusCode);
-  //       return response;
-  //     }
-
-  //     const response = h.response({
-  //       status: 'error',
-  //       message: 'Maaf, terjadi kegagalan pada server kami.',
-  //     });
-  //     response.code(500);
-  //     console.error(error);
-  //     return response;
-  //   }
+  //   const response = h.response({
+  //     status: 'success',
+  //     data: {
+  //       // eslint-disable-next-line no-undef
+  //       fileLocation: `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`,
+  //     },
+  //   });
+  //   response.code(201);
+  //   return response;
   // }
-
   // Menambahakan Bagian postLikeAlbumHandler
   async postLikeAlbumHandler(request, h) {
     const { id } = request.params;
