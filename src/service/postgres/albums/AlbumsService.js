@@ -89,16 +89,12 @@ class AlbumsService {
   async editAlbumCoverById(albumId, url) {
     const query = {
       text: 'UPDATE albums SET "coverUrl" = $1 WHERE id = $2',
-      values: [albumId, url],
+      values: [url, albumId],
     };
     const result = await this._pool.query(query);
 
-    try {
-      if (result.rows.length) {
-        throw new NotFoundError('Gagal menambahkan cover. Id tidak ditemukan.');
-      }
-    } catch (error) {
-      throw new error;
+    if (!result.rows.length) {
+      throw new NotFoundError('Cover Album gagal diperbarui. Id tidak ditemukan');
     }
   }
 
