@@ -55,14 +55,10 @@ class AlbumsHandler {
     const { id } = request.params;
     const album = await this._service.getAlbumById(id);
 
-    // Memastikan coverUrl ada, tidak tidak ada maka set menjadi null
-    //const coverUrl = album.coverUrl || null;
-
     return {
       status: 'success',
       data: {
         album,
-        //coverUrl,
       },
     };
   }
@@ -92,30 +88,7 @@ class AlbumsHandler {
       message: 'Album telah berhasil dihapus',
     };
   }
-  // Menambahakan Bagian Cover Handler
-  // async postUploadImageHandler(request, h) {
-  //   const { cover } = request.payload;
-  //   const { id: albumId } = request.params;
-
-  //   this._uploadsValidator.validateImageHeaders(cover.hapi.headers);
-
-  //   const filename = await this._service.writeFile(cover, cover.hapi);
-  //   // eslint-disable-next-line no-undef
-  //   const url = `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`;
-  //   await this._albumsService.updateCoverAlbumById(albumId, url);
-
-
-
-  //   const response = h.response({
-  //     status: 'success',
-  //     data: {
-  //       // eslint-disable-next-line no-undef
-  //       fileLocation: `http://${process.env.HOST}:${process.env.PORT}/upload/covers/${filename}`,
-  //     },
-  //   });
-  //   response.code(201);
-  //   return response;
-  // }
+ 
   // Menambahakan Bagian postLikeAlbumHandler
   async postLikeAlbumHandler(request, h) {
     const { id } = request.params;

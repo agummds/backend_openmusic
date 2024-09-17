@@ -1,10 +1,7 @@
 const AlbumsHandler = require('./handler');
 const routes = require('./routes');
 const AlbumsService = require('../../service/postgres/albums/AlbumsService');
-//const UploadsValidator = require('../../validator/uploads');
-
 const albumsService = new AlbumsService();
-//const uploadsValidator = new UploadsValidator();
 
 //menentukan modul plugin yang diimpor dan digunakan oleh bagian lain
 module.exports = {

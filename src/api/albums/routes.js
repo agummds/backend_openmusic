@@ -1,5 +1,3 @@
-//const path = require('path');
-
 const routes = (handler) => [
   {
     method: 'POST',
@@ -26,28 +24,7 @@ const routes = (handler) => [
     path: '/albums/{id}',
     handler: handler.deleteAlbumByIdHandler,
   },
-  // {
-  //   method: 'POST',
-  //   path: '/albums/{id}/covers',
-  //   handler: handler.postUploadImageHandler,
-  //   options: {
-  //     payload: {
-  //       allow: 'multipart/form-data',
-  //       multipart: true,
-  //       output: 'stream',
-  //     },
-  //   },
-  // },
-  // {
-  //   method: 'GET',
-  //   path: '/albums/covers/{param*}',
-  //   handler: {
-  //     directory: {
-  //       // eslint-disable-next-line no-undef
-  //       path: path.resolve(__dirname, '/file/covers'),
-  //     },
-  //   },
-  // },
+
   {
     method: 'POST',
     path: '/albums/{id}/likes',
