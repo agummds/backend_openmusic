@@ -56,13 +56,13 @@ class AlbumsHandler {
     const album = await this._service.getAlbumById(id);
 
     // Memastikan coverUrl ada, tidak tidak ada maka set menjadi null
-    const coverUrl = album.coverUrl || null;
+    //const coverUrl = album.coverUrl || null;
 
     return {
       status: 'success',
       data: {
         album,
-        coverUrl,
+        //coverUrl,
       },
     };
   }

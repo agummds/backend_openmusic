@@ -34,7 +34,7 @@ class AlbumsService {
 
   async getAlbumById(id) {
     const albumQuery = {
-      text: 'SELECT id, name, year FROM albums WHERE id = $1',
+      text: 'SELECT * FROM albums WHERE id = $1',
       values: [id],
     };
     const albumResult = await this._pool.query(albumQuery);
@@ -43,7 +43,6 @@ class AlbumsService {
       throw new NotFoundError('Album tidak ditemukan');
     }
 
-    // const album = albumResult.rows[0];
     const album = albumResult.rows.map(mapAlbumsDBToModel)[0];
 
     const songsQuery = {
@@ -93,7 +92,7 @@ class AlbumsService {
     };
     const result = await this._pool.query(query);
 
-    if (!result.rowCount) {
+    if (!result.rows.length) {
       throw new NotFoundError('Cover Album gagal diperbarui. Id tidak ditemukan');
     }
   }
