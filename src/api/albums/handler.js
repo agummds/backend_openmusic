@@ -3,9 +3,6 @@ class AlbumsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
-    //this._albumsService = albumsService;
-    //this._uploadsValidator = uploadsValidator;
-
 
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
     this.getAlbumsHandler = this.getAlbumsHandler.bind(this);
@@ -15,8 +12,6 @@ class AlbumsHandler {
     this.postLikeAlbumHandler = this.postLikeAlbumHandler.bind(this);
     this.getLikesAlbumHandler = this.getLikesAlbumHandler.bind(this);
     this.deleteLikeAlbumHandler = this.deleteLikeAlbumHandler.bind(this);
-    //this.postUploadImageHandler = this.postUploadImageHandler.bind(this);
-
   }
 
   async postAlbumHandler(request, h) {
