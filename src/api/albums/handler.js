@@ -88,7 +88,6 @@ class AlbumsHandler {
       message: 'Album telah berhasil dihapus',
     };
   }
- 
   // Menambahakan Bagian postLikeAlbumHandler
   async postLikeAlbumHandler(request, h) {
     const { id } = request.params;
